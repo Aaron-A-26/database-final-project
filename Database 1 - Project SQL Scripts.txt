@@ -1,0 +1,109 @@
+create table CEO (
+    CEO_ID varchar(5),
+    CEO_LAST_NAME varchar(20) not null,
+    CEO_FIRST_NAME varchar(20) not null,
+    CEO_STREET varchar(20) not null,
+    CEO_CITY varchar(20) not null,
+    CEO_STATE char(2) not null,
+    CEO_ZIP_CODE integer not null,
+    CEO_EMAIL varchar(20) not null,
+    CEO_AREA_CODE char(3) not null,
+    CEO_PHONE_NUMBER char(7) not null,
+    CEO_BUSINESS_CATEGORY varchar(30) not null,
+    CEO_COMP_GROSS_ANL_INC number(12,2),
+    constraint PK_CEO primary key (CEO_ID)
+);
+
+create table CUSTOMER (
+    C_ID varchar(10),
+    C_LAST_NAME varchar(20) not null,
+    C_FIRST_NAME varchar(20) not null,
+    C_STREET varchar(20) not null,
+    C_CITY varchar(20) not null,
+    C_STATE char(2) not null,
+    C_ZIP_CODE integer not null,
+    C_EMAIL varchar(20),
+    C_AREA_CODE char(3),
+    C_PHONE_NUMBER char(7),
+    C_ADDRESS_TYPE char(1) not null,
+    C_BUSINESS_CATEGORY varchar(20),
+    C_COMP_GROSS_ANL_INC number(12,2),
+    C_MARRIAGE_STATUS varchar(2),
+    C_GENDER char(1),
+    C_AGE integer,
+    C_INCOME number(12,2),
+    constraint PK_C_ID primary key (C_ID)
+);
+
+create table REGION (
+    R_ID integer,
+    R_NAME varchar(20) not null,
+    R_MANAGER_CEO_ID varchar(5) not null,
+    constraint PK_R_ID primary key (R_ID),
+    constraint FK_R_MANAGER_CEO_ID foreign key (R_MANAGER_CEO_ID) references CEO (CEO_ID)
+);
+
+create table STORE (
+    S_ID varchar(10),
+    S_STREET varchar(20) not null,
+    S_CITY varchar(20) not null,
+    S_STATE char(2) not null,
+    S_ZIP_CODE integer not null,
+    S_AREA_CODE char(3) not null,
+    S_PHONE_NUMBER char(7) not null,
+    S_SPERSON_COUNT integer,
+    S_R_ID integer not null,
+    S_MANAGER_SPERSON_ID varchar(10) not null,
+    constraint PK_S_ID primary key (S_ID),
+    constraint FK_S_R_ID foreign key (S_R_ID) references REGION (R_ID)
+);
+
+create table PRODUCT (
+    P_ID varchar(5),
+    P_S_ID varchar(10) not null,
+    P_NAME varchar(50) not null,
+    P_INVENTORY_AMOUNT integer not null,
+    P_PRICE number(4,2) not null,
+    P_TYPE char(1) not null,
+    P_DESCRIPTION varchar(1000) not null,
+    constraint PK_P_ID_AND_P_S_ID primary key (P_ID, P_S_ID),
+    constraint FK_P_S_ID foreign key (P_S_ID) references STORE (S_ID)
+);
+
+create table SALESPERSON (
+    SPERSON_ID varchar(10),
+    SPERSON_LAST_NAME varchar(20) not null,
+    SPERSON_FIRST_NAME varchar(20) not null,
+    SPERSON_STREET varchar(20) not null,
+    SPERSON_CITY varchar(20) not null,
+    SPERSON_STATE char(2) not null,
+    SPERSON_ZIP_CODE integer not null,
+    SPERSON_EMAIL varchar(20) not null,
+    SPERSON_AREA_CODE char(3) not null,
+    SPERSON_PHONE_NUMBER char(7) not null,
+    SPERSON_JOB_TITLE varchar(30),
+    SPERSON_SALARY number(8,2), 
+    SPERSON_ASSIGNED_S_ID varchar(5),
+    constraint PK_SPERSON_ID primary key (SPERSON_ID),
+    constraint FK_SPERSON_ASSIGNED_S_ID foreign key (SPERSON_ASSIGNED_S_ID) references STORE (S_ID)
+);
+
+alter table STORE
+add constraint FK_S_MANAGER_SPERSON_ID foreign key (S_MANAGER_SPERSON_ID) references SALESPERSON (SPERSON_ID);
+
+create table TRANSACTION (
+    T_ID varchar(10),
+    T_DATE date not null,
+    T_R_ID integer not null,
+    T_P_S_ID varchar(10) not null,
+    T_P_ID varchar(5) not null,
+    T_P_QUANTITY integer not null,
+    T_SPERSON_ID varchar(10) not null,
+    T_C_ID varchar(10) not null,
+    T_TOTAL_PRICE number(6,2) not null,
+    constraint PK_T_ID primary key (T_ID),
+    constraint FK_T_R_ID foreign key (T_R_ID) references REGION (R_ID),
+    constraint FK_T_P_S_ID_AND_T_P_ID foreign key (T_P_S_ID, T_P_ID) references PRODUCT (P_S_ID, P_ID),
+    constraint FK_T_SPERSON_ID foreign key (T_SPERSON_ID) references SALESPERSON (SPERSON_ID),
+    constraint FK_T_C_ID foreign key (T_C_ID) references CUSTOMER (C_ID)
+);

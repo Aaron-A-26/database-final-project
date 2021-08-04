@@ -1,0 +1,9 @@
+- One store (at a given moment) can have many customers.
+- A store (at a given moment) may not have any customers.
+- A store must be managed by at least one salesperson.
+- A salesperson manages at most one store.
+- A salesperson may not be assigned to manage a store.
+- A salesperson manages at most one region.
+- A salesperson may not be assigned to manage a region.
+- A CEO can manage many salespeople.
+- A CEO must manage at least one salesperson.
