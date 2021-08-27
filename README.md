@@ -1,4 +1,4 @@
-# database-final-project
+# Database 1 - Final Project
 
 This repository contains files which demonstrate work done on a final project in my Database 1 class in the SP 2020 semester at Florida Polytechnic University.
 
